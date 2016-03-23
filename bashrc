@@ -116,14 +116,3 @@ if ! shopt -oq posix; then
   fi
 fi
 
-alias sshji='ssh root@192.168.11.1'
-alias sshop='ssh root@192.168.10.1'
-alias sshngrok='ssh root@120.24.175.90'
-alias sshlstin='ssh lisitong@192.168.1.222'
-alias sshvpn='ssh root@103.55.24.195'
-alias sshbao='ssh lstbao@listome.cn -p 50001'
-alias sshlstbao='ssh lstbao@listome.cn -p 50022'
-export PS1="\[\e[1;31m\]\u@\[\e[30m\]\h \W\$ \[\e[m\]"
-export PATH=$PATH:/home/bao/go/bin:/home/bao/.local/bin
-export GOPATH=/home/bao/gowork
-
