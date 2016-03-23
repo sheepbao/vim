@@ -27,19 +27,8 @@ shopt -s checkwinsize
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
-############################################################
-# check OS
-_uname=$(uname);
-
-if [ $_uname = 'Linux' ];then 
-    _os='linux'
-elif [ $_uname = 'Darwin' ]; then
-    _os='osx'
-else
-    echo "No support for your OS.";
-    exit;
-fi
-############################################################
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
@@ -54,7 +43,7 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-force_color_prompt=yes
+#force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -68,8 +57,7 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-	PS1='${debian_chroot:+($debian_chroot)}\u@\h:\[\e[35;1m\]\w\[\e[33;0m\]\$ \[\e[37;0m\]'
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -96,114 +84,46 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
 # some more ls aliases
-alias ll='ls -alFh'
+alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-
-#mv & cp
-#alias cp='cp -g'
-#alias mv='mv -g'
-
-#	proxy
-alias sshchina='ssh -CfNg -D 9999 yjiang@v21.sshchina.com'
-
-#	dropbox
-alias dropbox='python /home/yjiang/.dropbox-dist/dropbox.py'
-
-# some more git aliases
-alias gf='git-ftp'
-alias gtst='git status'
-alias gtlg='git log --stat'
-alias gtlg1='git log --pretty=format:"%h %an %s" --color=auto'
-alias gtlg2='git log --pretty=oneline'
-alias gtbr='git branch'
-alias gtco='git commit'
-alias gtdi='git diff'
-alias gv='git svn'
-
-#htop
-alias htop='sudo htop'
-
-#iftop
-alias iftop='sudo iftop -i eth0'
-
-#rsync
-alias rsync='rsync -avz'
-
-#tmux
-alias tmux='tmux -2'
-alias tmuxp='tmuxp load ~/.tmuxp.yaml -2'
-
-alias cal='cal | grep --before-context 6 --after-context 6 --color -e " $(date +%e)" -e "^$(date +%e)"'
-
-alias vi='vim'
-
-#ctags
-alias ctags='ctags -R *'
-
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-# bash-completion
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
-  elif [ $_os = 'osx' ];then 
-    if [ -f $(brew --prefix)/etc/bash_completion ]; then
-        . $(brew --prefix)/etc/bash_completion
-    fi
   fi
 fi
 
+alias sshji='ssh root@192.168.11.1'
+alias sshop='ssh root@192.168.10.1'
+alias sshngrok='ssh root@120.24.175.90'
+alias sshlstin='ssh lisitong@192.168.1.222'
+alias sshvpn='ssh root@103.55.24.195'
+alias sshbao='ssh lstbao@listome.cn -p 50001'
+alias sshlstbao='ssh lstbao@listome.cn -p 50022'
+export PS1="\[\e[1;31m\]\u@\[\e[30m\]\h \W\$ \[\e[m\]"
+export PATH=$PATH:/home/bao/go/bin:/home/bao/.local/bin
+export GOPATH=/home/bao/gowork
 
-if [ $_os = 'osx' ];then
-    ###################
-    # osx alias
-    alias flushdns='dscacheutil -flushcache'
-    alias lsusb='system_profiler SPUSBDataType'
-    ###################
-
-    ###################
-    #osx colors
-    if brew list | grep coreutils > /dev/null ; then
-        PATH="$(brew --prefix coreutils)/libexec/gnubin:$PATH"
-        alias ls='ls --color=auto'
-        alias grep='grep --color=auto'
-        alias fgrep='fgrep --color=auto'
-        alias egrep='egrep --color=auto'
-        eval `gdircolors -b $HOME/.vim/dircolors`
-    fi
-    ###################
-
-
-    ###################
-    PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-    MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-    ##
-    # Your previous /Users/yjiang/.bash_profile file was backed up as /Users/yjiang/.bash_profile.macports-saved_2014-12-01_at_16:13:58
-    ##
-
-    # MacPorts Installer addition on 2014-12-01_at_16:13:58: adding an appropriate PATH variable for use with MacPorts.
-    export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-    # Finished adapting your PATH environment variable for use with MacPorts.
-    ###################
-fi
-
-#set bash to vim mode
-set -o vi
-
-#set unicode
-export LANG="zh_CN.UTF-8"
-export LANG_ALL="zh_CN.UTF-8"
-#set archlinux aur editor
-export VISUAL="vim"
-#include private settings
-if [ -f ~/.bash_local ]; then
-    . ~/.bash_local
-fi
