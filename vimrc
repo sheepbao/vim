@@ -203,7 +203,7 @@
     set showmode                    " Display the current mode
 
     set cursorline                  " Highlight current line
-
+    hi CursorLine cterm=NONE ctermbg=black ctermfg=green guibg=NONE guifg=NONE
     highlight clear SignColumn      " SignColumn should match background
     highlight clear LineNr          " Current line number row will have same background color in relative mode
     let g:CSApprox_hook_post = ['hi clear SignColumn']
